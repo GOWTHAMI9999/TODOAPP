@@ -1,12 +1,24 @@
-version: "3.9"
+# version: "3.9"
+
+# services:
+#   todo-app:
+#     container_name: todo-react-typescript
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "80:80" # Expose Nginx on port 80
+#     restart: always
+
+version: '3.8'
 
 services:
-  todo-app:
-    container_name: todo-react-typescript
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80" # Expose Nginx on port 80
+      - "3000:80"  # Access app on http://localhost:3000
+    environment:
+      - NODE_ENV=production
     restart: always
-
