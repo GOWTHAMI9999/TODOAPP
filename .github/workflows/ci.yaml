@@ -26,6 +26,13 @@ jobs:
 
       - name: Run New Container
         run: docker run -d -p 3000:80 --name todo-container ${{ secrets.DOCKER_USERNAME }}/todo:latest
+        
+      - name: Install kubectl
+        run: |
+          curl -LO https://dl.k8s.io/release/v1.30.0/bin/linux/amd64/kubectl
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+          
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f deployment.yaml
