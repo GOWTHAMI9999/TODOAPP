@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI-CD Pipeline
 
 on:
   push:
@@ -6,23 +6,24 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: self-hosted   # your EC2 runner
+  deploy:
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
       - name: Install Dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build || echo "No build step"
-
-      - name: Test
+      - name: Run Tests
         run: npm test || echo "No tests"
+
+      - name: Build Docker Image
+        run: docker build -t todoapp .
+
+      - name: Stop Old Container
+        run: docker rm -f todoapp-container || true
+
+      - name: Run New Container
+        run: docker run -d -p 3000:3000 --name todoapp-container todoapp
