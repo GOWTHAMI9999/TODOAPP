@@ -19,11 +19,17 @@ jobs:
       - name: Run Tests
         run: npm test || echo "No tests"
 
+      - name: Docker Login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
       - name: Build Docker Image
-        run: docker build -t todoapp .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/todoapp:latest .
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/todoapp:latest
 
       - name: Stop Old Container
         run: docker rm -f todoapp-container || true
 
       - name: Run New Container
-        run: docker run -d -p 3000:3000 --name todoapp-container todoapp
+        run: docker run -d -p 3000:3000 --name todoapp-container ${{ secrets.DOCKER_USERNAME }}/todoapp:latest
