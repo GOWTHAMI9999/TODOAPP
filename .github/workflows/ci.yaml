@@ -26,6 +26,10 @@ jobs:
 
       - name: Run New Container
         run: docker run -d -p 3000:80 --name todo-container ${{ secrets.DOCKER_USERNAME }}/todo:latest
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl apply -f service.yaml
 
 
         
